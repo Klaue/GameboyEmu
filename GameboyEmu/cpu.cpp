@@ -1,17 +1,6 @@
 #include "mmu.h"
 #include "cpu.h"
 
-//Flag register macros
-
-//Set if math operation yields zero or if CP instruction has matching values.
-#define ZERO_FLAG 0x80
-//Set if last math instruction was a subtraction
-#define SUBTRACT_FLAG 0x40
-//Set if last math instruction carried out of the least significant nybble
-#define HALF_CARRY_FLAG 0x20
-//Set if last instruction overflowed.
-#define CARRY_FLAG 0x10
-
 //Combined 16-bit Registers
 #define AF A << 8 | F
 #define BC B << 8 | C
@@ -461,7 +450,7 @@ void CPU::LD_A_pnn()
 
 void CPU::LD_A_pCplusIO()
 {
-    LD_r1_p16(A, C + IO_PORTS);
+    LD_r1_p16(A, C + MMU::IO_PORTS);
 }
 
 //I feel like this instruction can be optimized.
@@ -487,7 +476,7 @@ void CPU::LDI_A_pHL()
 
 void CPU::LD_A_pnplusIO()
 {
-    A = mem->read8(mem->read8(PC++) + IO_PORTS);
+    A = mem->read8(mem->read8(PC++) + MMU::IO_PORTS);
     last_step_clk = 3;
 }
 #pragma endregion Operations that load value n into A
@@ -557,7 +546,7 @@ void CPU::LD_pnn_A()
 //Loads A into the location specified by the contents of C plus 0xFF00.
 void CPU::LD_pCplusIO_A()
 {
-    LD_p16_r2(C + IO_PORTS, A);
+    LD_p16_r2(C + MMU::IO_PORTS, A);
 }
 
 //Again... optimizable?
@@ -583,7 +572,7 @@ void CPU::LDI_pHL_A()
 
 void CPU::LD_pnplusIO_A()
 {
-    mem->write8(mem->read8(PC++) + IO_PORTS, A);
+    mem->write8(mem->read8(PC++) + MMU::IO_PORTS, A);
     last_step_clk = 3;
 }
 #pragma endregion Operations that load the contents of A somewhere else.

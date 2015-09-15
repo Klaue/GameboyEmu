@@ -42,7 +42,7 @@ private:
     unsigned long long last_step_clk;
 
     /*==============================================
-                    Registers
+                       Registers
     ===============================================*/
     //A is accumulator. F is flag register.
     unsigned char A, B, C, D, E, F, H, L;
@@ -50,6 +50,18 @@ private:
     uint16_t PC;
     //Stack pointer.
     uint16_t SP;
+
+    /*==============================================
+                       Constants
+    ===============================================*/
+    //Set if math operation yields zero or if CP instruction has matching values.
+    static const unsigned char ZERO_FLAG = 0x80;
+    //Set if last math instruction was a subtraction
+    static const unsigned char SUBTRACT_FLAG = 0x40;
+    //Set if last math instruction carried out of the least significant nybble
+    static const unsigned char HALF_CARRY_FLAG = 0x20;
+    //Set if last instruction overflowed.
+    static const unsigned char CARRY_FLAG = 0x10;
 
     /*==============================================
             Instruction Set Implementation.

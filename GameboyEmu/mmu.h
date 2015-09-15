@@ -1,18 +1,7 @@
 #pragma once
 #include <cstdint>
 
-#define STATIC_ROM    0x0000
-#define SWITCH_ROM    0x4000
-#define VRAM        0x8000
-#define SWITCH_RAM    0xA000
-#define SYSTEM_RAM    0xC000
-#define RAM_SHADOW    0xE000
-#define SPRITE_ATTR 0xFE00
-#define EMPTY_MEM_1    0xFEA0
-#define IO_PORTS    0xFF00
-#define EMPTY_MEM_2 0xFF4C
-#define ZERO_PAGE    0xFF80
-#define INTERRUPT    0xFFFF
+
 
 class MMU {
 public:
@@ -38,4 +27,17 @@ public:
     void write8(uint16_t addr, unsigned char val);
     //Writes the 16-bit value val to the location specified by addr.
     void write16(uint16_t addr, uint16_t val);
+
+    static const uint16_t STATIC_ROM    = 0x0000;
+    static const uint16_t SWITCH_ROM    = 0x4000;
+    static const uint16_t VRAM          = 0x8000;
+    static const uint16_t SWITCH_RAM    = 0xA000;
+    static const uint16_t SYSTEM_RAM    = 0xC000;
+    static const uint16_t RAM_SHADOW    = 0xE000;
+    static const uint16_t SPRITE_ATTR   = 0xFE00;
+    static const uint16_t EMPTY_MEM_1   = 0xFEA0;
+    static const uint16_t IO_PORTS      = 0xFF00;
+    static const uint16_t EMPTY_MEM_2   = 0xFF4C;
+    static const uint16_t ZERO_PAGE     = 0xFF80;
+    static const uint16_t INTERRUPT     = 0xFFFF;
 };
