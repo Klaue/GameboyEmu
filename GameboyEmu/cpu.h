@@ -39,7 +39,7 @@ private:
     //This is the number of machine cycles. 4 clock cycles in one of these.
     unsigned long long clk;
     //The number of machine cycles required by the last instruction.
-    unsigned long long last_step_clk;
+    unsigned long long lastStepClk;
 
     /*==============================================
                        Registers
@@ -319,6 +319,95 @@ private:
     void SUB_A_pHL();
     void SUB_A_n();
 #pragma endregion Subtracts a value from the accumulator.
+
+    // Generic version. Inlined.
+    // Subtracts contents of r2 plus carry flag from
+    // the accumulator.
+    // @param r2  An 8-bit register
+    // @post  Flag register is set accordingly.
+    void SBC_A_r2(unsigned char r2);
+#pragma region Sub-Carry ops
+    void SBC_A_A();
+    void SBC_A_B();
+    void SBC_A_C();
+    void SBC_A_D();
+    void SBC_A_E();
+    void SBC_A_H();
+    void SBC_A_pHL();
+    void SBC_A_n();
+#pragma endregion Subtract value + carry from the accumulator.
+
+    // Generic version. Inlined.
+    // Logically ANDs r2 with A. Stores result in A.
+    // @param r2  Register to logically AND with accumulator.
+    // @post  Zero flag set if result is zero. Half Carry flag set.
+    //          Other flags reset.
+    void AND_r2(unsigned char r2);
+#pragma region AND ops
+    void AND_A();
+    void AND_B();
+    void AND_C();
+    void AND_D();
+    void AND_E();
+    void AND_H();
+    void AND_L();
+    void AND_pHL();
+    void AND_n();
+#pragma endregion Logically AND 8-bit value with accumulator.
+
+    // Generic version. Inlined.
+    // Logically ORs r2 with A. Stores result in A.
+    // @param r2  register to logically OR with accumulator.
+    // @post  Zero flag set if result is zero. Other flags reset.
+    void OR_r2(unsigned char r2);
+#pragma region OR ops
+    void OR_A();
+    void OR_B();
+    void OR_C();
+    void OR_D();
+    void OR_E();
+    void OR_H();
+    void OR_L();
+    void OR_pHL();
+    void OR_n();
+#pragma endregion Logically OR 8-bit value with accumulator
+
+    // Generic version. Inlined.
+    // Logically XORs r2 with A. Stores result in A.
+    // @param r2  register to logically XOR with accumulator.
+    // @post  Zero flag set if result is zero. Other flags reset.
+    void XOR_r2(unsigned char r2);
+#pragma region XOR ops
+    void XOR_A();
+    void XOR_B();
+    void XOR_C();
+    void XOR_D();
+    void XOR_E();
+    void XOR_H();
+    void XOR_L();
+    void XOR_pHL();
+    void XOR_n();
+#pragma endregion Logically XOR 8-bit value with accumulator
+
+    // Generic version. Inlined.
+    // Compares r2 with A. Results found in flag register.
+    // @param r2  Register to compare with accumulator.
+    // @post  Zero flag set if values are equivalent.
+    //          Subtraction flag is set. Half-carry flag
+    //          set as if subtraction. Carry flag set if
+    //          value in accumulator is less than r2.
+    void CP_r2(unsigned char r2);
+#pragma region CP ops
+    void CP_A();
+    void CP_B();
+    void CP_C();
+    void CP_D();
+    void CP_E();
+    void CP_H();
+    void CP_L();
+    void CP_pHL();
+    void CP_n();
+#pragma endregion Compares 8-bit value with accumulator.
 
     /*------------MISCELLANEOUS--------------*/
     //No operation

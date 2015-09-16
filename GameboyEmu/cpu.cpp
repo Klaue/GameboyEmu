@@ -19,7 +19,7 @@ CPU::CPU() :
     PC(0x100),
     SP(0xFFFE),
     clk(0),
-    last_step_clk(0)
+    lastStepClk(0)
 {}
 
 /*============================================
@@ -54,7 +54,7 @@ CPU::CPU() :
 inline void CPU::LD_nn_n(unsigned char & reg)
 {
     reg = mem->read8(PC++);
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 #pragma region LD_nn_n Implementations
@@ -109,7 +109,7 @@ void CPU::LD_L_n()
 inline void CPU::LD_r1_r2(unsigned char & r1, unsigned char r2) 
 {
     r1 = r2;
-    last_step_clk = 1;
+    lastStepClk = 1;
 }
 
 //Helper
@@ -117,7 +117,7 @@ inline void CPU::LD_r1_r2(unsigned char & r1, unsigned char r2)
 inline void CPU::LD_r1_p16(unsigned char & r1, uint16_t p16)
 {
     r1 = mem->read8(p16);
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 //Helper
@@ -125,7 +125,7 @@ inline void CPU::LD_r1_p16(unsigned char & r1, uint16_t p16)
 inline void CPU::LD_p16_r2(uint16_t p16, unsigned char r2)
 {
     mem->write8(p16, r2);
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 #pragma region LD_r1_r2 Implementations
@@ -418,7 +418,7 @@ void CPU::LD_pHL_L()
 inline void CPU::LD_pHL_n() 
 {
     mem->write8(H << 8 | L, mem->read8(PC++));
-    last_step_clk = 3;
+    lastStepClk = 3;
 }
 
 
@@ -445,7 +445,7 @@ void CPU::LD_A_pnn()
 {
     A = mem->read8(mem->read8(PC + 1) << 8 | mem->read8(PC));
     PC += 2;
-    last_step_clk = 4;
+    lastStepClk = 4;
 }
 
 void CPU::LD_A_pCplusIO()
@@ -461,7 +461,7 @@ void CPU::LDD_A_pHL()
     A = mem->read8(tempHL--);
     H = tempHL >> 8;
     L = tempHL & 0x00FF;
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 void CPU::LDI_A_pHL()
@@ -471,13 +471,13 @@ void CPU::LDI_A_pHL()
     A = mem->read8(tempHL++);
     H = tempHL >> 8;
     L = tempHL & 0x00FF;
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 void CPU::LD_A_pnplusIO()
 {
     A = mem->read8(mem->read8(PC++) + MMU::IO_PORTS);
-    last_step_clk = 3;
+    lastStepClk = 3;
 }
 #pragma endregion Operations that load value n into A
 
@@ -540,7 +540,7 @@ void CPU::LD_pnn_A()
 {
     mem->write8(mem->read8(PC + 1) << 8 | mem->read8(PC), A);
     PC += 2;
-    last_step_clk = 4;
+    lastStepClk = 4;
 }
 
 //Loads A into the location specified by the contents of C plus 0xFF00.
@@ -557,7 +557,7 @@ void CPU::LDD_pHL_A()
     mem->write8(tempHL--, A);
     H = tempHL >> 8;
     L = tempHL & 0x00FF;
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 void CPU::LDI_pHL_A()
@@ -567,13 +567,13 @@ void CPU::LDI_pHL_A()
     mem->write8(tempHL++, A);
     H = tempHL >> 8;
     L = tempHL & 0x00FF;
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 void CPU::LD_pnplusIO_A()
 {
     mem->write8(mem->read8(PC++) + MMU::IO_PORTS, A);
-    last_step_clk = 3;
+    lastStepClk = 3;
 }
 #pragma endregion Operations that load the contents of A somewhere else.
 
@@ -592,7 +592,7 @@ inline void CPU::LD16_n_nn(unsigned char & b1, unsigned char & b2)
     b1 = immediateValue >> 8;
     b2 = immediateValue & 0x00FF;
     PC += 2;
-    last_step_clk = 3;
+    lastStepClk = 3;
 }
 
 #pragma region LD_n_nn(b1, b2) Implementations
@@ -616,14 +616,14 @@ void CPU::LD16_SP_nn()
 {
     SP = mem->read16(PC);
     PC += 2;
-    last_step_clk = 3;
+    lastStepClk = 3;
 }
 #pragma endregion Operations for loading 16-bit immediate values.
 
 void CPU::LD_SP_HL()
 {
     SP = HL;
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 void CPU::LDHL_SP_n()
@@ -631,14 +631,14 @@ void CPU::LDHL_SP_n()
     uint16_t temp = SP + mem->read8(PC++);
     H = temp >> 8;
     L = temp & 0x00FF;
-    last_step_clk = 3;
+    lastStepClk = 3;
 }
 
 void CPU::LD_nn_SP()
 {
     mem->write16(mem->read16(PC), SP);
     PC += 2;
-    last_step_clk = 5;
+    lastStepClk = 5;
 }
 
 
@@ -649,7 +649,7 @@ inline void CPU::PUSH_nn(uint16_t nn)
 {
     mem->write8(SP, nn);
     SP -= 2;
-    last_step_clk = 4;
+    lastStepClk = 4;
 }
 
 #pragma region Push Implementations
@@ -683,7 +683,7 @@ inline void CPU::POP_nn(unsigned char & b1, unsigned char & b2)
     b1 = temp >> 8;
     b2 = temp & 0x00FF;
     SP += 2;
-    last_step_clk = 3;
+    lastStepClk = 3;
 }
 
 #pragma region Pop Implementations
@@ -720,7 +720,7 @@ inline void CPU::ADD_A_r2(unsigned char r2)
 {
     A += r2;
     F = (A ? 0 : ZERO_FLAG) | ((A & 0x0F) < (r2 & 0x0F) ? HALF_CARRY_FLAG : 0) | ((A < r2) ? CARRY_FLAG : 0);
-    last_step_clk = 1;
+    lastStepClk = 1;
 }
 
 #pragma region ADD_A Implementations
@@ -764,7 +764,7 @@ void CPU::ADD_A_pHL()
     unsigned char r2 = mem->read8(HL);
     A += r2;
     F = (A ? 0 : ZERO_FLAG) | ((A & 0x0F) < (r2 & 0x0F) ? HALF_CARRY_FLAG : 0) | ((A < r2) ? CARRY_FLAG : 0);
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 void CPU::ADD_A_n()
@@ -772,7 +772,7 @@ void CPU::ADD_A_n()
     unsigned char r2 = mem->read8(PC++);
     A += r2;
     F = (A ? 0 : ZERO_FLAG) | ((A & 0x0F) < (r2 & 0x0F) ? HALF_CARRY_FLAG : 0) | ((A < r2) ? CARRY_FLAG : 0);
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 #pragma endregion Adding values onto the accumulator.
 
@@ -787,7 +787,7 @@ inline void CPU::ADC_A_r2(unsigned char r2)
     F = (A ? 0 : ZERO_FLAG) 
         | ((A & 0x0F) < r2 + (F & CARRY_FLAG & 0x0F) ? HALF_CARRY_FLAG : 0) 
         | ((A < r2 + (F & CARRY_FLAG)) ? CARRY_FLAG : 0);
-    last_step_clk = 1;
+    lastStepClk = 1;
 }
 #pragma region ADC_A_r2(r2) Implementations
 void CPU::ADC_A_A()
@@ -832,7 +832,7 @@ void CPU::ADC_A_pHL()
     F = (A ? 0 : ZERO_FLAG)
         | ((A & 0x0F) < r2 + (F & CARRY_FLAG & 0x0F) ? HALF_CARRY_FLAG : 0)
         | ((A < r2 + (F & CARRY_FLAG)) ? CARRY_FLAG : 0);
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 void CPU::ADC_A_n()
@@ -842,7 +842,7 @@ void CPU::ADC_A_n()
     F = (A ? 0 : ZERO_FLAG)
         | ((A & 0x0F) < r2 + (F & CARRY_FLAG & 0x0F) ? HALF_CARRY_FLAG : 0)
         | ((A < r2 + (F & CARRY_FLAG)) ? CARRY_FLAG : 0);
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 #pragma endregion Adds value plus carry flag to accumulator.
 
@@ -858,7 +858,7 @@ inline void CPU::SUB_A_r2(unsigned char r2)
         | ((A & 0x0F) > (r2 & 0x0F) ? HALF_CARRY_FLAG : 0) 
         | ((A > r2) ? CARRY_FLAG : 0);
     A -= r2;
-    last_step_clk = 1;
+    lastStepClk = 1;
 }
 #pragma region SUB_A_r2(r2) Implementations
 void CPU::SUB_A_A()
@@ -904,7 +904,7 @@ void CPU::SUB_A_pHL()
         | ((A & 0x0F) > (r2 & 0x0F) ? HALF_CARRY_FLAG : 0)
         | ((A > r2) ? CARRY_FLAG : 0);
     A -= r2;
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 
 void CPU::SUB_A_n()
@@ -915,6 +915,332 @@ void CPU::SUB_A_n()
         | ((A & 0x0F) > (r2 & 0x0F) ? HALF_CARRY_FLAG : 0)
         | ((A > r2) ? CARRY_FLAG : 0);
     A -= r2;
-    last_step_clk = 2;
+    lastStepClk = 2;
 }
 #pragma endregion Subtracts a value from the accumulator.
+
+
+
+/* SBC A, n
+   Subtracts 8-bit value plus carry flag from the accumulator.
+*/
+inline void CPU::SBC_A_r2(unsigned char r2)
+{
+    r2 = r2 + ((F & CARRY_FLAG) >> 4);
+    F = (A - r2 ? 0 : ZERO_FLAG)
+        | SUBTRACT_FLAG
+        | ((A & 0x0F) > (r2 & 0x0F) ? HALF_CARRY_FLAG : 0)
+        | ((A > r2) ? CARRY_FLAG : 0);
+    A -= r2;
+    lastStepClk = 1;
+}
+#pragma region SBC A,n implementations
+void CPU::SBC_A_A()
+{
+    SBC_A_r2(A);
+}
+
+void CPU::SBC_A_B()
+{
+    SBC_A_r2(B);
+}
+
+void CPU::SBC_A_C()
+{
+    SBC_A_r2(C);
+}
+
+void CPU::SBC_A_D()
+{
+    SBC_A_r2(D);
+}
+
+void CPU::SBC_A_E()
+{
+    SBC_A_r2(E);
+}
+
+void CPU::SBC_A_H()
+{
+    SBC_A_r2(H);
+}
+
+void CPU::SBC_A_pHL()
+{
+    unsigned char r2 = mem->read8(HL);
+    F = (A - r2 ? 0 : ZERO_FLAG)
+        | SUBTRACT_FLAG
+        | ((A & 0x0F) > (r2 & 0x0F) ? HALF_CARRY_FLAG : 0)
+        | ((A > r2) ? CARRY_FLAG : 0);
+    A -= r2;
+    lastStepClk = 2;
+}
+//This doesn't seem to have an opcode? Is it actually supported by the gameboy?
+void CPU::SBC_A_n()
+{
+    unsigned char r2 = mem->read8(PC++);
+    F = (A - r2 ? 0 : ZERO_FLAG)
+        | SUBTRACT_FLAG
+        | ((A & 0x0F) > (r2 & 0x0F) ? HALF_CARRY_FLAG : 0)
+        | ((A > r2) ? CARRY_FLAG : 0);
+    A -= r2;
+    lastStepClk = 2;
+}
+#pragma endregion 
+
+
+
+/* AND n
+   Logically AND 8-bit value with accumulator and store result in accumulator.
+*/
+inline void CPU::AND_r2(unsigned char r2)
+{
+    A = A & r2;
+    F = (A ? 0 : ZERO_FLAG) | HALF_CARRY_FLAG;
+    lastStepClk = 1;
+}
+#pragma region AND implementations
+void CPU::AND_A()
+{
+    AND_r2(A);
+}
+
+void CPU::AND_B()
+{
+    AND_r2(B);
+}
+
+void CPU::AND_C()
+{
+    AND_r2(C);
+}
+
+void CPU::AND_D()
+{
+    AND_r2(D);
+}
+
+void CPU::AND_E()
+{
+    AND_r2(E);
+}
+
+void CPU::AND_H()
+{
+    AND_r2(H);
+}
+
+void CPU::AND_L()
+{
+    AND_r2(L);
+}
+
+void CPU::AND_pHL()
+{
+    A = A & mem->read8(HL);
+    F = (A ? 0 : ZERO_FLAG) | HALF_CARRY_FLAG;
+    lastStepClk = 2;
+}
+
+void CPU::AND_n()
+{
+    A = A & mem->read8(PC++);
+    F = (A ? 0 : ZERO_FLAG) | HALF_CARRY_FLAG;
+    lastStepClk = 2;
+}
+#pragma endregion Logically AND 8-bit value with accumulator.
+
+
+
+/* OR n
+   Logically OR 8-bit value with accumulator and store result in accumulator.
+*/
+inline void CPU::OR_r2(unsigned char r2)
+{
+    A = A | r2;
+    F = (A ? 0 : ZERO_FLAG);
+    lastStepClk = 1;
+}
+#pragma region OR implementations
+void CPU::OR_A()
+{
+    OR_r2(A);
+}
+
+void CPU::OR_B()
+{
+    OR_r2(B);
+}
+
+void CPU::OR_C()
+{
+    OR_r2(C);
+}
+
+void CPU::OR_D()
+{
+    OR_r2(D);
+}
+
+void CPU::OR_E()
+{
+    OR_r2(E);
+}
+
+void CPU::OR_H()
+{
+    OR_r2(H);
+}
+
+void CPU::OR_L()
+{
+    OR_r2(L);
+}
+
+void CPU::OR_pHL()
+{
+    A = A | mem->read8(HL);
+    F = (A ? 0 : ZERO_FLAG);
+    lastStepClk = 2;
+}
+
+void CPU::OR_n()
+{
+    A = A | mem->read8(PC++);
+    F = (A ? 0 : ZERO_FLAG);
+    lastStepClk = 2;
+}
+#pragma endregion Logically OR 8-bit value with accumulator.
+
+
+
+/* XOR n
+   Logically XOR 8-bit value with accumulator and store result in accumulator.
+*/
+inline void CPU::XOR_r2(unsigned char r2)
+{
+    A = A ^ r2;
+    F = (A ? 0 : ZERO_FLAG);
+    lastStepClk = 1;
+}
+#pragma region XOR implementations
+void CPU::XOR_A()
+{
+    XOR_r2(A);
+}
+
+void CPU::XOR_B()
+{
+    XOR_r2(B);
+}
+
+void CPU::XOR_C()
+{
+    XOR_r2(C);
+}
+
+void CPU::XOR_D()
+{
+    XOR_r2(D);
+}
+
+void CPU::XOR_E()
+{
+    XOR_r2(E);
+}
+
+void CPU::XOR_H()
+{
+    XOR_r2(H);
+}
+
+void CPU::XOR_L()
+{
+    XOR_r2(L);
+}
+
+void CPU::XOR_pHL()
+{
+    A = A ^ mem->read8(HL);
+    F = (A ? 0 : ZERO_FLAG);
+    lastStepClk = 2;
+}
+
+void CPU::XOR_n()
+{
+    A = A ^ mem->read8(PC++);
+    F = (A ? 0 : ZERO_FLAG);
+    lastStepClk = 2;
+}
+#pragma endregion Logically XOR 8-bit value with accumulator
+
+
+
+/* CP n
+   Compares 8-bit value with accumulator register and changes flag accordingly.
+*/
+inline void CPU::CP_r2(unsigned char r2)
+{
+    F = (A == r2 ? ZERO_FLAG : 0)
+        | SUBTRACT_FLAG
+        | ((A & 0x0F) > (r2 & 0x0F) ? HALF_CARRY_FLAG : 0)
+        | (A < r2 ? CARRY_FLAG : 0);
+    lastStepClk = 1;
+}
+#pragma region CP implementations
+void CPU::CP_A()
+{
+    CP_r2(A);
+}
+
+void CPU::CP_B()
+{
+    CP_r2(B);
+}
+
+void CPU::CP_C()
+{
+    CP_r2(C);
+}
+
+void CPU::CP_D()
+{
+    CP_r2(D);
+}
+
+void CPU::CP_E()
+{
+    CP_r2(E);
+}
+
+void CPU::CP_H()
+{
+    CP_r2(H);
+}
+
+void CPU::CP_L()
+{
+    CP_r2(L);
+}
+
+void CPU::CP_pHL()
+{
+    unsigned char r2 = mem->read8(HL);
+    F = (A == r2 ? ZERO_FLAG : 0)
+        | SUBTRACT_FLAG
+        | ((A & 0x0F) > (r2 & 0x0F) ? HALF_CARRY_FLAG : 0)
+        | (A < r2 ? CARRY_FLAG : 0);
+    lastStepClk = 2;
+}
+
+void CPU::CP_n()
+{
+    unsigned char r2 = mem->read8(PC++);
+    F = (A == r2 ? ZERO_FLAG : 0)
+        | SUBTRACT_FLAG
+        | ((A & 0x0F) >(r2 & 0x0F) ? HALF_CARRY_FLAG : 0)
+        | (A < r2 ? CARRY_FLAG : 0);
+    lastStepClk = 2;
+}
+#pragma endregion Compares 8-bit value with accumulator.
+
