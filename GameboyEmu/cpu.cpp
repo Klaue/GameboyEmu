@@ -553,7 +553,10 @@ void CPU::LD_pCplusIO_A()
 void CPU::LDD_pHL_A()
 {
     uint16_t tempHL = HL;
-    F = (HL == 1 ? ZERO_FLAG : 0) | SUBTRACT_FLAG | ((HL & 0x01FF) == 0x0100 ? HALF_CARRY_FLAG : 0) | (F & CARRY_FLAG);
+    F = (HL == 1 ? ZERO_FLAG : 0) 
+        | SUBTRACT_FLAG 
+        | ((HL & 0x0FFF) == 0x0000 ? 0 : HALF_CARRY_FLAG) 
+        | (F & CARRY_FLAG);
     mem->write8(tempHL--, A);
     H = tempHL >> 8;
     L = tempHL & 0x00FF;
@@ -563,7 +566,9 @@ void CPU::LDD_pHL_A()
 void CPU::LDI_pHL_A()
 {
     uint16_t tempHL = HL;
-    F = (HL == 0xFFFF ? ZERO_FLAG : 0) | ((HL & 0x00FF) == 0x00FF ? HALF_CARRY_FLAG : 0) | (F & CARRY_FLAG);
+    F = (HL == 0xFFFF ? ZERO_FLAG : 0) 
+        | ((HL & 0x0FFF) == 0x0FFF ? HALF_CARRY_FLAG : 0) 
+        | (F & CARRY_FLAG);
     mem->write8(tempHL++, A);
     H = tempHL >> 8;
     L = tempHL & 0x00FF;
@@ -594,7 +599,6 @@ inline void CPU::LD16_n_nn(unsigned char & b1, unsigned char & b2)
     PC += 2;
     lastStepClk = 3;
 }
-
 #pragma region LD_n_nn(b1, b2) Implementations
 void CPU::LD16_BC_nn()
 {
@@ -651,7 +655,6 @@ inline void CPU::PUSH_nn(uint16_t nn)
     SP -= 2;
     lastStepClk = 4;
 }
-
 #pragma region Push Implementations
 void CPU::PUSH_AF()
 {
@@ -674,6 +677,9 @@ void CPU::PUSH_HL()
 }
 #pragma endregion Push 16-bit registers onto stack
 
+
+
+
 /* POP nn
    Pops 16 bits off the stack into a 16-bit combined register.
 */
@@ -685,7 +691,6 @@ inline void CPU::POP_nn(unsigned char & b1, unsigned char & b2)
     SP += 2;
     lastStepClk = 3;
 }
-
 #pragma region Pop Implementations
 void CPU::POP_AF()
 {
@@ -722,7 +727,6 @@ inline void CPU::ADD_A_r2(unsigned char r2)
     F = (A ? 0 : ZERO_FLAG) | ((A & 0x0F) < (r2 & 0x0F) ? HALF_CARRY_FLAG : 0) | ((A < r2) ? CARRY_FLAG : 0);
     lastStepClk = 1;
 }
-
 #pragma region ADD_A Implementations
 void CPU::ADD_A_A()
 {
@@ -1244,3 +1248,253 @@ void CPU::CP_n()
 }
 #pragma endregion Compares 8-bit value with accumulator.
 
+
+
+/* INC r2
+   Increments 8-bit value by one.
+*/
+inline void CPU::INC_r2(unsigned char & r2)
+{
+    F = (r2 == 0xFF ? ZERO_FLAG : 0)
+        | ((r2 & 0x0F) == 0x0F ? HALF_CARRY_FLAG : 0)
+        | (F & CARRY_FLAG);
+    ++r2;
+    lastStepClk = 1;
+}
+#pragma region INC Implementations
+void CPU::INC_A()
+{
+    INC_r2(A);
+}
+
+void CPU::INC_B()
+{
+    INC_r2(B);
+}
+
+void CPU::INC_C()
+{
+    INC_r2(C);
+}
+
+void CPU::INC_D()
+{
+    INC_r2(D);
+}
+
+void CPU::INC_E()
+{
+    INC_r2(E);
+}
+
+void CPU::INC_H()
+{
+    INC_r2(H);
+}
+
+void CPU::INC_L()
+{
+    INC_r2(L);
+}
+
+void CPU::INC_pHL()
+{
+    unsigned char r2 = mem->read8(HL);
+    F = (r2 == 0xFF ? ZERO_FLAG : 0)
+        | ((r2 & 0x0F) == 0x0F ? HALF_CARRY_FLAG : 0)
+        | (F & CARRY_FLAG);
+    ++r2;
+    mem->write8(HL, r2);
+    lastStepClk = 3;
+}
+#pragma endregion Increments register by one.
+
+
+
+/* DEC r2
+   Decrements 8-bit value by one.
+*/
+inline void CPU::DEC_r2(unsigned char & r2)
+{
+    F = (r2 == 1 ? ZERO_FLAG : 0)
+        | SUBTRACT_FLAG
+        | ((r2 & 0x00FF) == 0x0000 ? 0 : HALF_CARRY_FLAG)
+        | (F & CARRY_FLAG);
+    --r2;
+    lastStepClk = 1;
+}
+#pragma region DEC implementations
+void CPU::DEC_A()
+{
+    DEC_r2(A);
+}
+void CPU::DEC_B()
+{
+    DEC_r2(B);
+}
+void CPU::DEC_C()
+{
+    DEC_r2(C);
+}
+void CPU::DEC_D()
+{
+    DEC_r2(D);
+}
+void CPU::DEC_E()
+{
+    DEC_r2(E);
+}
+void CPU::DEC_H()
+{
+    DEC_r2(H);
+}
+void CPU::DEC_L()
+{
+    DEC_r2(L);
+}
+void CPU::DEC_pHL()
+{
+    unsigned char r2 = mem->read8(HL);
+    F = (r2 == 1 ? ZERO_FLAG : 0)
+        | SUBTRACT_FLAG
+        | ((r2 & 0x00FF) == 0x0000 ? 0 : HALF_CARRY_FLAG)
+        | (F & CARRY_FLAG);
+    --r2;
+    mem->write8(HL, r2);
+    lastStepClk = 3;
+}
+#pragma endregion Decrements register by one.
+
+
+/*=================================================
+          16-BIT ARITHMETIC LOGIC UNIT
+=================================================*/
+
+/* ADD HL,n
+   Increments HL by the 16-bit value n
+*/
+inline void CPU::ADD16_HL_r2(uint16_t r2)
+{
+    uint16_t tempHL = HL;
+    tempHL += r2;
+    H = (tempHL & 0xFF00) >> 8;
+    L = (tempHL & 0x00FF);
+    F = (F & ZERO_FLAG)
+        | ((r2 & 0x0FFF) > (tempHL & 0x0FFF) ? HALF_CARRY_FLAG : 0)
+        | (r2 > tempHL ? CARRY_FLAG : 0);
+    lastStepClk = 2;
+}
+#pragma region ADD_HL,n Implementations
+void CPU::ADD16_HL_BC()
+{
+    ADD16_HL_r2(BC);
+}
+
+void CPU::ADD16_HL_DE()
+{
+    ADD16_HL_r2(DE);
+}
+
+void CPU::ADD16_HL_HL()
+{
+    ADD16_HL_r2(HL);
+}
+
+void CPU::ADD16_HL_SP()
+{
+    ADD16_HL_r2(SP);
+}
+#pragma endregion Adds 16-bit value to register_HL
+
+
+
+
+/* ADD SP,n
+   Adds 8-bit immediate value to stack pointer.
+*/
+void CPU::ADD16_SP_n()
+{
+    unsigned char r2 = mem->read8(PC++);
+    SP += r2;
+    F = ((r2 & 0x0FFF) > (SP & 0x0FFF) ? HALF_CARRY_FLAG : 0)
+        | (r2 > SP ? CARRY_FLAG : 0);
+    lastStepClk = 4;
+}
+
+
+
+/* INC nn
+   Increments 16-bit register by one.
+*/
+inline void CPU::INC16_r2(unsigned char & highByte, unsigned char & lowByte)
+{
+    uint16_t temp = (highByte << 8) | lowByte;
+    ++temp;
+    highByte = (temp & 0xFF00) >> 8;
+    lowByte = (temp & 0x00FF);
+    lastStepClk = 2;
+}
+#pragma region 16-bit INC Implementation
+void CPU::INC16_BC()
+{
+    INC16_r2(B, C);
+}
+
+void CPU::INC16_DE()
+{
+    INC16_r2(D, E);
+}
+
+void CPU::INC16_HL()
+{
+    INC16_r2(H, L);
+}
+
+void CPU::INC16_SP()
+{
+    ++SP;
+    lastStepClk = 2;
+}
+#pragma endregion Increments 16-bit register by one.
+
+
+
+/* DEC nn
+   Decrements 16-bit register by one.
+*/
+void CPU::DEC16_r2(unsigned char & highByte, unsigned char & lowByte)
+{
+    uint16_t temp = (highByte << 8) | lowByte;
+    --temp;
+    highByte = (temp & 0xFF00) >> 8;
+    lowByte = (temp & 0x00FF);
+    lastStepClk = 2;
+}
+#pragma region 16-bit DEC Implementations
+void CPU::DEC16_BC()
+{
+    DEC16_r2(B, C);
+}
+
+void CPU::DEC16_DE()
+{
+    DEC16_r2(D, E);
+}
+
+void CPU::DEC16_HL()
+{
+    DEC16_r2(H, L);
+}
+
+void CPU::DEC16_SP()
+{
+    --SP;
+    lastStepClk = 2;
+}
+#pragma endregion Decrements 16-bit register by one.
+
+
+
+/*=================================================
+                  MISCELLANEOUS
+=================================================*/

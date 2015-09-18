@@ -409,9 +409,89 @@ private:
     void CP_n();
 #pragma endregion Compares 8-bit value with accumulator.
 
+    // Generic version. Inlined.
+    // Increments the value in the register by one.
+    // @param r2  The register to increment
+    // @post  Zero flag set if result is zero. Subtraction
+    //          flag reset.  Half carry set if carry from bit 3.
+    //          Carry flag remains the same.
+    void INC_r2(unsigned char & r2);
+#pragma region INC ops
+    void INC_A();
+    void INC_B();
+    void INC_C();
+    void INC_D();
+    void INC_E();
+    void INC_H();
+    void INC_L();
+    void INC_pHL();
+#pragma endregion Increments register by one.
+
+    // Generic version. Inlined.
+    // Decrements the value in the register by one.
+    // @param r2  The register to decrement
+    // @post  Zero flag set if result is zero. Subtraction
+    //          flag set.  Half carry set if no borrow from bit 4.
+    //          Carry flag remains the same.
+    void DEC_r2(unsigned char & r2);
+#pragma region DEC ops
+    void DEC_A();
+    void DEC_B();
+    void DEC_C();
+    void DEC_D();
+    void DEC_E();
+    void DEC_H();
+    void DEC_L();
+    void DEC_pHL();
+#pragma endregion Decrements register by one.
+
+
+    /*------16-BIT ARITHMETIC LOGIC UNIT------*/
+
+    // Generic version. Inlined.
+    // Adds the given 16-bit value to combined 16-bit register HL.
+    // @param r2  The 16-bit register to add to HL
+    // @post  Zero flag remains the same. Subtraction flag is reset.
+    //          Half carry set if carry from bit 11. Carry flag set if
+    //          carry from bit 15.
+    void ADD16_HL_r2(uint16_t r2);
+#pragma region ADD HL ops
+    void ADD16_HL_BC();
+    void ADD16_HL_DE();
+    void ADD16_HL_HL();
+    void ADD16_HL_SP();
+#pragma endregion Adds 16-bit value to HL
+
+    // Adds an 8-bit immediate value to the stack pointer.
+    // @post  Zero flag and subtraction flag reset. Half-carry set if
+    //          carry from bit 11. Carry set if overflow.
+    void ADD16_SP_n();
+
+    // Generic version. Inlined.
+    // Increments combined 16-bit register by one.
+    // @param r2  A combined 16-bit register to increment.
+    void INC16_r2(unsigned char & highByte, unsigned char & lowByte);
+#pragma region 16-bit INC ops
+    void INC16_BC();
+    void INC16_DE();
+    void INC16_HL();
+    void INC16_SP();
+#pragma endregion Increments 16-bit register by one.
+
+    //Generic version. Inlined.
+    // Decrements combined 16-bit register by one.
+    // @param r2  A combined 16-bit register to decrement.
+    void DEC16_r2(unsigned char & highByte, unsigned char & lowByte);
+#pragma region 16-bit DEC ops
+    void DEC16_BC();
+    void DEC16_DE();
+    void DEC16_HL();
+    void DEC16_SP();
+#pragma endregion Decrements 16-bit value by one.
+
+
     /*------------MISCELLANEOUS--------------*/
-    //No operation
-    void NOP();
+
 
 
 };
