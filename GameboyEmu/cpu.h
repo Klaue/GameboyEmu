@@ -50,6 +50,21 @@ private:
     uint16_t PC;
     //Stack pointer.
     uint16_t SP;
+    
+    /*==============================================
+               Additional Machine State
+    ===============================================*/
+    // Interrupt master enable
+    bool IME;
+    // -1 means no transition in progress.
+    // 0 means transition on this step.
+    // 1 means transition after next step.
+    char IMETransitionCounter;
+    // True if setting to enable on transition.
+    // False if setting to disable on transition.
+    bool setToEnable;
+    bool halted;
+    bool stopped;
 
     /*==============================================
                        Constants
@@ -492,6 +507,58 @@ private:
 
     /*------------MISCELLANEOUS--------------*/
 
+    //Generic version. Inlined.
+    // Swaps top and lower nybbles of 8-bit register.
+    // @param r  An 8-bit register to swap around
+    // @post  Zero flag set if result is zero. All other flags reset.
+    void SWAP_r(unsigned char & r);
+#pragma region SWAP ops
+    void SWAP_A();
+    void SWAP_B();
+    void SWAP_C();
+    void SWAP_D();
+    void SWAP_E();
+    void SWAP_H();
+    void SWAP_L();
+    void SWAP_pHL();
+#pragma endregion Swaps lower and upper nybbles of register.
 
+    // Adjusts register A into BCD. If either nybble > 9, then
+    // 6 is added to that nybble. The lower or upper nybble will
+    // also be added to if the HALF_CARRY or CARRY flag is set, respectively.
+    // @post The carry flag is set if the upper nybble was added to. Half-carry is
+    //          reset. Zero flag set if result is zero. Subtract flag is maintained.
+    void DAA();
 
+    // Complements accumulator (flips all the bits).
+    // @post  Subtract flag and half carry flag are set. Other flags are maintained.
+    void CPL();
+
+    // Complements carry flag.
+    // @post  Subtract flag and half-carry flag are reset. Zero flag is maintained.
+    //          Carry flag is obviously flipped.
+    void CCL();
+
+    // Sets the carry flag.
+    // @post  Subtract flag and half-carry flag are reset. Zero flag is maintained.
+    //          Carry flag is... obviously... set...
+    void SCF();
+
+    //Eats a machine cycle and nothing more.
+    void NOP();
+
+    // If interrupts are enabled, this will suspend the CPU until the next interrupt
+    // occurs. If they are disabled the CPU is not suspended, and the model is not 
+    // a Gameboy Color, the next instruction is skipped.
+    void HALT();
+
+    // Stops the CPU until a button is pressed. This should also affect the display in
+    // a machine dependent way... maybe I'll implement that later.
+    void STOP();
+
+    // Disables master interrupt flag following the next instruction
+    void DI();
+
+    // Enables master interrupt flag following the next instruction
+    void EI();
 };
