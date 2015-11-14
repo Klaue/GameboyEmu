@@ -561,4 +561,138 @@ private:
 
     // Enables master interrupt flag following the next instruction
     void EI();
+
+    /*----------ROTATES AND SHIFTS------------*/
+    
+    // Rotates accumulator register 1 bit to the left.
+    // @post  Previous bit-7 goes into carry flag. Zero flag set
+    //        if result is zero. Other flags are reset.
+    void RLCA();
+
+    // Rotates accumulator register 1 bit to the left through
+    // the carry flag.
+    // @post Previous bit-7 goes into carry flag. Zero flag set
+    //       if result is zero.
+    void RLA();
+
+    // Rotates accumulator register 1 bit to the right.
+    // @post Previous bit-0 goes into carry flag. Zero flag set
+    //       if result is zero. Other flags are reset.
+    void RRCA();
+
+    // Rotates accumulator register 1 bit to the right through
+    // the carry flag.
+    // @post Previous bit-0 goes into carry flag. Zero flag set
+    //       if result is zero. Other flags are reset.
+    void RRA();
+
+    // Inline function.
+    // Rotates 8-bit register r2 1 bit to the left.
+    // @post Previous bit-7 goes into carry flag. Zero flag set
+    //       if the result is zero. Other flags are reset.
+    void RLC_r2(unsigned char & r2);
+#pragma region RLC_r2 ops
+    void RLC_A();
+    void RLC_B();
+    void RLC_C();
+    void RLC_D();
+    void RLC_E();
+    void RLC_H();
+    void RLC_L();
+    void RLC_pHL();
+#pragma endregion Rotates register r2 one bit to the left.
+
+    // Inline function. 
+    // Rotates 8-bit register r2 1 bit to the left through carry flag.
+    // @post Previous bit-7 goes into carry flag. Zero flag set
+    //       if the result is zero. Other flags are reset.
+    void RL_r2(unsigned char & r2);
+#pragma region RL_r2 ops
+    void RL_A();
+    void RL_B();
+    void RL_C();
+    void RL_D();
+    void RL_E();
+    void RL_H();
+    void RL_L();
+    void RL_pHL();
+#pragma endregion Rotates register r2 one bit to the left through carry flag.
+
+    // Inline function.
+    // Rotates 8-bit register r2 1 bit to the right.
+    // @post Previous bit-0 goes into carry flag. Zero flag set
+    //       if the result is zero. Other flags are reset.
+    void RRC_r2(unsigned char & r2);
+#pragma region RRC_r2 ops
+    void RRC_A();
+    void RRC_B();
+    void RRC_C();
+    void RRC_D();
+    void RRC_E();
+    void RRC_H();
+    void RRC_L();
+    void RRC_pHL();
+#pragma endregion Rotates register r2 one bit to the right.
+
+    // Rotates 8-bit register r2 1 bit to the right through carry flag.
+    // @post Previous bit-0 goes into carry flag. Zero flag set
+    //       if the result is zero. Other flags are reset.
+    void RR_r2(unsigned char & r2);
+#pragma region RR_r2 ops
+    void RR_A();
+    void RR_B();
+    void RR_C();
+    void RR_D();
+    void RR_E();
+    void RR_H();
+    void RR_L();
+    void RR_pHL();
+#pragma endregion Rotates register r2 one bit to the right through carry flag.
+
+    // Performs a 1-bit arithmetic left-shift on 8-bit register r2
+    // @post Previous bit-7 goes into carry flag. Zero flag set
+    //       if the result is zero. Other flags are reset.
+    void SLA_r2(unsigned char & r2);
+#pragma region SLA_r2 ops
+    void SLA_A();
+    void SLA_B();
+    void SLA_C();
+    void SLA_D();
+    void SLA_E();
+    void SLA_H();
+    void SLA_L();
+    void SLA_pHL();
+#pragma endregion Shifts register r2 one bit to the left.
+
+    // Performs a 1-bit arithmetic right-shift on 8-bit register r2
+    // (the most significant bit is preserved).
+    // @post Previous bit-7 goes into carry flag. Zero flag set
+    //       if the result is zero. Other flags are reset.
+    void SRA_r2(unsigned char & r2);
+#pragma region SLA_r2 ops
+    void SRA_A();
+    void SRA_B();
+    void SRA_C();
+    void SRA_D();
+    void SRA_E();
+    void SRA_H();
+    void SRA_L();
+    void SRA_pHL();
+#pragma endregion Shifts register r2 one bit to the right, preserving MSB.
+
+    // Performs a 1-bit logical right-shift on 8-bit register r2
+    // (the most significant bit is zeroed).
+    // @post Previous bit-7 goes into carry flag. Zero flag set
+    //       if the result is zero. Other flags are reset.
+    void SRL_r2(unsigned char & r2);
+#pragma region SLA_r2 ops
+    void SRL_A();
+    void SRL_B();
+    void SRL_C();
+    void SRL_D();
+    void SRL_E();
+    void SRL_H();
+    void SRL_L();
+    void SRL_pHL();
+#pragma endregion Shifts register r2 one bit to the right, filling MSB with 0.
 };
