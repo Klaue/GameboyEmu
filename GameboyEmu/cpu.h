@@ -16,7 +16,11 @@
 #include <cstdint>
 #include "mmu.h"
 
-
+//Combined 16-bit Registers
+#define AF (A << 8) | F
+#define BC (B << 8) | C
+#define DE (D << 8) | E
+#define HL (H << 8) | L
 
 class CPU {
 public:
@@ -78,9 +82,24 @@ private:
     //Set if last instruction overflowed.
     static const unsigned char CARRY_FLAG = 0x10;
 
-    /*==============================================
-            Instruction Set Implementation.
-    ===============================================*/
+    /*============================================
+                    INSTRUCTIONS
+    =============================================*/
+    /*A note on instruction implementations.
+    There are a little over 500 instructions supported
+    by the GameBoy's modified Z80 CPU. These are the
+    things that need to be done a million times per
+    second, and therefore they need to be pretty damn fast.
+    The idea is to stuff these all into an array that can
+    be accessed by the opcode. As such, they all need to be
+    called directly with as little overhead as possible.
+    Hence why they're all being written individually.
+    Where a function seems logical to minimize the need for
+    code, I am instead writing an inline version of that
+    function and calling it within each relevant instruction.
+    This should at least cut down on modification anomalies.
+    */
+
 
     /*----------------8-BIT LOADS------------------*/
     
@@ -695,4 +714,39 @@ private:
     void SRL_L();
     void SRL_pHL();
 #pragma endregion Shifts register r2 one bit to the right, filling MSB with 0.
+
+
+    /*--------------BIT TESTS-------------*/
+    
+    // All of the following test a specific bit in a specific register.
+    // @post  Zero flag is set if the tested bit is 0.
+    //        The subtraction flag is reset.
+    //        The The half-carry flag is set.
+    //        The carry flag is preserved.
+
+    //Inlined function for bit 0.
+    void BIT_r_0(unsigned char r);
+#pragma region Bit 0 Test ops
+    void BIT_A_0();
+    void BIT_B_0();
+    void BIT_C_0();
+    void BIT_D_0();
+    void BIT_E_0();
+    void BIT_H_0();
+    void BIT_L_0();
+    void BIT_pHL_0();
+#pragma endregion Tests bit zero of given register.
+
+    //Inlined function for bit 1.
+    void BIT_r_1(unsigned char r);
+#pragma region Bit 1 Test ops
+    void BIT_A_1();
+    void BIT_B_1();
+    void BIT_C_1();
+    void BIT_D_1();
+    void BIT_E_1();
+    void BIT_H_1();
+    void BIT_L_1();
+    void BIT_pHL_1();
+#pragma endregion Tests bit one of given register.
 };

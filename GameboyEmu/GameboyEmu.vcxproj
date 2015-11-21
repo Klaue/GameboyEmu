@@ -122,7 +122,14 @@
     <ClInclude Include="mmu.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="alu16.cpp" />
+    <ClCompile Include="alu8.cpp" />
+    <ClCompile Include="bits.cpp" />
     <ClCompile Include="cpu.cpp" />
+    <ClCompile Include="load16.cpp" />
+    <ClCompile Include="load8.cpp" />
+    <ClCompile Include="misc.cpp" />
+    <ClCompile Include="rotshift.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
