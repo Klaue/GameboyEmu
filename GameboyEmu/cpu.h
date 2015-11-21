@@ -749,4 +749,83 @@ private:
     void BIT_L_1();
     void BIT_pHL_1();
 #pragma endregion Tests bit one of given register.
+
+    //Inlined function for bit 2.
+    void BIT_r_2(unsigned char r);
+#pragma region Bit 2 Test ops
+    void BIT_A_2();
+    void BIT_B_2();
+    void BIT_C_2();
+    void BIT_D_2();
+    void BIT_E_2();
+    void BIT_H_2();
+    void BIT_L_2();
+    void BIT_pHL_2();
+#pragma endregion Tests bit two of given register.
+
+    //Inlined function for bit 3.
+    void BIT_r_3(unsigned char r);
+#pragma region Bit 3 Test ops
+    void BIT_A_3();
+    void BIT_B_3();
+    void BIT_C_3();
+    void BIT_D_3();
+    void BIT_E_3();
+    void BIT_H_3();
+    void BIT_L_3();
+    void BIT_pHL_3();
+#pragma endregion Tests bit three of given register.
+
+    //Inlined function for bit 4.
+    void BIT_r_4(unsigned char r);
+#pragma region Bit 3 Test ops
+    void BIT_A_4();
+    void BIT_B_4();
+    void BIT_C_4();
+    void BIT_D_4();
+    void BIT_E_4();
+    void BIT_H_4();
+    void BIT_L_4();
+    void BIT_pHL_4();
+#pragma endregion Tests bit four of given register.
+
+    //Inlined function for bit 5.
+    void BIT_r_5(unsigned char r);
+#pragma region Bit 5 Test ops
+    void BIT_A_5();
+    void BIT_B_5();
+    void BIT_C_5();
+    void BIT_D_5();
+    void BIT_E_5();
+    void BIT_H_5();
+    void BIT_L_5();
+    void BIT_pHL_5();
+#pragma endregion Tests bit five of given register.
+
+    //Inlined function for bit 6.
+    void BIT_r_6(unsigned char r);
+#pragma region Bit 6 Test ops
+    void BIT_A_6();
+    void BIT_B_6();
+    void BIT_C_6();
+    void BIT_D_6();
+    void BIT_E_6();
+    void BIT_H_6();
+    void BIT_L_6();
+    void BIT_pHL_6();
+#pragma endregion Tests bit six of given register.
+
+    //Inlined function for bit 7.
+    void BIT_r_7(unsigned char r);
+#pragma region Bit 7 Test ops
+    void BIT_A_7();
+    void BIT_B_7();
+    void BIT_C_7();
+    void BIT_D_7();
+    void BIT_E_7();
+    void BIT_H_7();
+    void BIT_L_7();
+    void BIT_pHL_7();
+#pragma endregion Tests bit seven of given register.
+
 };
