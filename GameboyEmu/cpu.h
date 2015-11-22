@@ -725,7 +725,7 @@ private:
     //        The carry flag is preserved.
 
     //Inlined function for bit 0.
-    void BIT_r_0(unsigned char r);
+    void BIT_r_mask(unsigned char r, unsigned char mask);
 #pragma region Bit 0 Test ops
     void BIT_A_0();
     void BIT_B_0();
@@ -737,8 +737,6 @@ private:
     void BIT_pHL_0();
 #pragma endregion Tests bit zero of given register.
 
-    //Inlined function for bit 1.
-    void BIT_r_1(unsigned char r);
 #pragma region Bit 1 Test ops
     void BIT_A_1();
     void BIT_B_1();
@@ -750,8 +748,6 @@ private:
     void BIT_pHL_1();
 #pragma endregion Tests bit one of given register.
 
-    //Inlined function for bit 2.
-    void BIT_r_2(unsigned char r);
 #pragma region Bit 2 Test ops
     void BIT_A_2();
     void BIT_B_2();
@@ -763,8 +759,6 @@ private:
     void BIT_pHL_2();
 #pragma endregion Tests bit two of given register.
 
-    //Inlined function for bit 3.
-    void BIT_r_3(unsigned char r);
 #pragma region Bit 3 Test ops
     void BIT_A_3();
     void BIT_B_3();
@@ -776,9 +770,7 @@ private:
     void BIT_pHL_3();
 #pragma endregion Tests bit three of given register.
 
-    //Inlined function for bit 4.
-    void BIT_r_4(unsigned char r);
-#pragma region Bit 3 Test ops
+#pragma region Bit 4 Test ops
     void BIT_A_4();
     void BIT_B_4();
     void BIT_C_4();
@@ -789,8 +781,6 @@ private:
     void BIT_pHL_4();
 #pragma endregion Tests bit four of given register.
 
-    //Inlined function for bit 5.
-    void BIT_r_5(unsigned char r);
 #pragma region Bit 5 Test ops
     void BIT_A_5();
     void BIT_B_5();
@@ -802,8 +792,6 @@ private:
     void BIT_pHL_5();
 #pragma endregion Tests bit five of given register.
 
-    //Inlined function for bit 6.
-    void BIT_r_6(unsigned char r);
 #pragma region Bit 6 Test ops
     void BIT_A_6();
     void BIT_B_6();
@@ -815,8 +803,6 @@ private:
     void BIT_pHL_6();
 #pragma endregion Tests bit six of given register.
 
-    //Inlined function for bit 7.
-    void BIT_r_7(unsigned char r);
 #pragma region Bit 7 Test ops
     void BIT_A_7();
     void BIT_B_7();
@@ -828,4 +814,187 @@ private:
     void BIT_pHL_7();
 #pragma endregion Tests bit seven of given register.
 
+    //Helper function for SET. No flags affected. Inlined.
+    void CPU::SET_r_mask(unsigned char & r, unsigned char mask);
+
+    //Sets given bit to 1.
+#pragma region Bit 0 Set ops
+    void SET_A_0();
+    void SET_B_0();
+    void SET_C_0();
+    void SET_D_0();
+    void SET_E_0();
+    void SET_H_0();
+    void SET_L_0();
+    void SET_pHL_0();
+#pragma endregion Sets bit zero of given register.
+
+#pragma region Bit 1 Set ops
+    void SET_A_1();
+    void SET_B_1();
+    void SET_C_1();
+    void SET_D_1();
+    void SET_E_1();
+    void SET_H_1();
+    void SET_L_1();
+    void SET_pHL_1();
+#pragma endregion Sets bit one of given register.
+
+#pragma region Bit 2 Set ops
+    void SET_A_2();
+    void SET_B_2();
+    void SET_C_2();
+    void SET_D_2();
+    void SET_E_2();
+    void SET_H_2();
+    void SET_L_2();
+    void SET_pHL_2();
+#pragma endregion Sets bit two of given register.
+
+#pragma region Bit 3 Set ops
+    void SET_A_3();
+    void SET_B_3();
+    void SET_C_3();
+    void SET_D_3();
+    void SET_E_3();
+    void SET_H_3();
+    void SET_L_3();
+    void SET_pHL_3();
+#pragma endregion Sets bit three of given register.
+
+#pragma region Bit 3 Set ops
+    void SET_A_4();
+    void SET_B_4();
+    void SET_C_4();
+    void SET_D_4();
+    void SET_E_4();
+    void SET_H_4();
+    void SET_L_4();
+    void SET_pHL_4();
+#pragma endregion Sets bit four of given register.
+
+#pragma region Bit 5 Set ops
+    void SET_A_5();
+    void SET_B_5();
+    void SET_C_5();
+    void SET_D_5();
+    void SET_E_5();
+    void SET_H_5();
+    void SET_L_5();
+    void SET_pHL_5();
+#pragma endregion Sets bit five of given register.
+
+#pragma region Bit 6 Set ops
+    void SET_A_6();
+    void SET_B_6();
+    void SET_C_6();
+    void SET_D_6();
+    void SET_E_6();
+    void SET_H_6();
+    void SET_L_6();
+    void SET_pHL_6();
+#pragma endregion Sets bit six of given register.
+
+#pragma region Bit 7 Set ops
+    void SET_A_7();
+    void SET_B_7();
+    void SET_C_7();
+    void SET_D_7();
+    void SET_E_7();
+    void SET_H_7();
+    void SET_L_7();
+    void SET_pHL_7();
+#pragma endregion Sets bit seven of given register.
+
+    //Helper function for SET. No flags affected. Inlined.
+    void CPU::RES_r_mask(unsigned char & r, unsigned char mask);
+
+    //Resets given bit to 0.
+#pragma region Bit 0 Reset ops
+    void RES_A_0();
+    void RES_B_0();
+    void RES_C_0();
+    void RES_D_0();
+    void RES_E_0();
+    void RES_H_0();
+    void RES_L_0();
+    void RES_pHL_0();
+#pragma endregion Resets bit zero of given register.
+
+#pragma region Bit 1 Reset ops
+    void RES_A_1();
+    void RES_B_1();
+    void RES_C_1();
+    void RES_D_1();
+    void RES_E_1();
+    void RES_H_1();
+    void RES_L_1();
+    void RES_pHL_1();
+#pragma endregion Resets bit one of given register.
+
+#pragma region Bit 2 Reset ops
+    void RES_A_2();
+    void RES_B_2();
+    void RES_C_2();
+    void RES_D_2();
+    void RES_E_2();
+    void RES_H_2();
+    void RES_L_2();
+    void RES_pHL_2();
+#pragma endregion Resets bit two of given register.
+
+#pragma region Bit 3 Reset ops
+    void RES_A_3();
+    void RES_B_3();
+    void RES_C_3();
+    void RES_D_3();
+    void RES_E_3();
+    void RES_H_3();
+    void RES_L_3();
+    void RES_pHL_3();
+#pragma endregion Resets bit three of given register.
+
+#pragma region Bit 3 Reset ops
+    void RES_A_4();
+    void RES_B_4();
+    void RES_C_4();
+    void RES_D_4();
+    void RES_E_4();
+    void RES_H_4();
+    void RES_L_4();
+    void RES_pHL_4();
+#pragma endregion Resets bit four of given register.
+
+#pragma region Bit 5 Reset ops
+    void RES_A_5();
+    void RES_B_5();
+    void RES_C_5();
+    void RES_D_5();
+    void RES_E_5();
+    void RES_H_5();
+    void RES_L_5();
+    void RES_pHL_5();
+#pragma endregion Resets bit five of given register.
+
+#pragma region Bit 6 Reset ops
+    void RES_A_6();
+    void RES_B_6();
+    void RES_C_6();
+    void RES_D_6();
+    void RES_E_6();
+    void RES_H_6();
+    void RES_L_6();
+    void RES_pHL_6();
+#pragma endregion Resets bit six of given register.
+
+#pragma region Bit 7 Reset ops
+    void RES_A_7();
+    void RES_B_7();
+    void RES_C_7();
+    void RES_D_7();
+    void RES_E_7();
+    void RES_H_7();
+    void RES_L_7();
+    void RES_pHL_7();
+#pragma endregion Resets bit seven of given register.
 };
